@@ -7,7 +7,7 @@ import { ProgressBar } from "../progress-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, Dumbbell, Footprints, Bike, Flame, Target, BookOpen, X } from "lucide-react"
+import { Check, Dumbbell, Footprints, Bike, Flame, Target, BookOpen, X, Droplet } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
@@ -33,6 +33,7 @@ export function BodyView() {
   const store = useStore()
   const [weightInput, setWeightInput] = useState("")
   const todayData = store.getTodayData()
+  const waterCount = todayData.water ?? 0
   const cp = store.getCurrentPhase()
   const { stepsHit, cardioHit, done: fd, total: ft } = store.getFitDone()
 
@@ -159,6 +160,43 @@ export function BodyView() {
         </CardContent>
       </Card>
 
+      {/* Water Intake */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: colorMap.cyan }}>
+              Water Intake
+            </span>
+            <span className="font-mono text-xs font-semibold" style={{ color: waterCount >= 8 ? colorMap.lime : "var(--muted-foreground)" }}>
+              {waterCount}/8 glasses
+            </span>
+          </div>
+          <div className="grid grid-cols-8 gap-1.5">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+              <button
+                key={n}
+                onClick={() => store.setWater(n)}
+                className={cn(
+                  "aspect-square rounded-lg border flex items-center justify-center transition-all active:scale-95",
+                  waterCount >= n
+                    ? "bg-cyan-500/15 border-cyan-500/40"
+                    : "border-border/60 hover:border-border"
+                )}
+                aria-label={`${n} glass${n > 1 ? "es" : ""} of water`}
+              >
+                <Droplet
+                  className={cn("w-4 h-4 transition-all", waterCount >= n ? "fill-cyan-500/30" : "")}
+                  style={{ color: waterCount >= n ? colorMap.cyan : "var(--muted-foreground)" }}
+                />
+              </button>
+            ))}
+          </div>
+          <div className="mt-3 font-mono text-[10px] text-muted-foreground/60 text-center">
+            Tap to log glasses / 250ml each / 2L daily target
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Weight Log */}
       <Card>
         <CardContent className="p-4">
@@ -198,10 +236,11 @@ export function BodyView() {
                       <span className="text-base font-semibold text-cyan-500">{w.weight} kg</span>
                       <button
                         onClick={() => store.deleteWeight(w.date)}
-                        className="opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 opacity-40 p-1 rounded-md hover:bg-destructive/10 transition-all"
+                        className="opacity-60 md:opacity-0 md:group-hover:opacity-100 p-1.5 rounded-md hover:bg-destructive/10 active:bg-destructive/20 transition-all touch-manipulation"
                         title="Delete entry"
+                        aria-label="Delete weight entry"
                       >
-                        <X className="w-3.5 h-3.5 text-destructive" />
+                        <X className="w-4 h-4 text-destructive" />
                       </button>
                     </div>
                   </div>

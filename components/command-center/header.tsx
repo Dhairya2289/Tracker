@@ -43,7 +43,7 @@ export function Header() {
               COMMAND
             </div>
             <div className="font-mono text-[10px] text-muted-foreground tracking-[2px] mt-0.5">
-              CENTER · MDCAT
+              CENTER · NEET + CUET
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@ export function Header() {
           </div>
           <div className="font-mono text-[10px] text-muted-foreground mt-1.5 tracking-wider uppercase">
             {daysLeft !== null && daysLeft > 0 ? (
-              <span className="text-destructive/80 font-semibold">{daysLeft}D to MDCAT</span>
+              <span className="text-destructive/80 font-semibold">{daysLeft}D to NEET + CUET</span>
             ) : daysLeft === 0 ? (
               <span className="text-destructive font-semibold">EXAM DAY</span>
             ) : (

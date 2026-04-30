@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { useStore } from "@/lib/store"
-import { MEALS, NEET_BLOCKS, MDCAT_BLOCKS, MDCAT_BLOCK_INFO, SUBJ_COLOR, SUBJ_LBL, STEP_MS, CARDIO_MS } from "@/lib/data"
+import { MEALS, NEET_BLOCKS, NEET_SCHEDULE, NEET_SCHEDULE_INFO, SUBJ_COLOR, SUBJ_LBL } from "@/lib/data"
 import { ProgressRing } from "../progress-ring"
 import { ProgressBar } from "../progress-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon, Dumbbell } from "lucide-react"
+import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon, Timer, Play, Pause, RotateCcw, StickyNote } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
@@ -41,12 +41,12 @@ const blockIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElemen
 function getCurrentMdcatBlock() {
   const now = new Date()
   const mins = now.getHours() * 60 + now.getMinutes()
-  for (let i = 0; i < MDCAT_BLOCKS.length; i++) {
-    const b = MDCAT_BLOCKS[i]
+  for (let i = 0; i < NEET_SCHEDULE.length; i++) {
+    const b = NEET_SCHEDULE[i]
     const s = b.start[0] * 60 + b.start[1]
     const e = b.end[0] * 60 + b.end[1]
     if (mins >= s && mins < e) {
-      return { idx: i, pct: Math.round(((mins - s) / (e - s)) * 100), remaining: e - mins, block: MDCAT_BLOCK_INFO[i] }
+      return { idx: i, pct: Math.round(((mins - s) / (e - s)) * 100), remaining: e - mins, block: NEET_SCHEDULE_INFO[i] }
     }
   }
   return null
@@ -55,7 +55,7 @@ function getCurrentMdcatBlock() {
 function getBlockStatus(i: number) {
   const now = new Date()
   const mins = now.getHours() * 60 + now.getMinutes()
-  const b = MDCAT_BLOCKS[i]
+  const b = NEET_SCHEDULE[i]
   const s = b.start[0] * 60 + b.start[1]
   const e = b.end[0] * 60 + b.end[1]
   return mins >= e ? "done" : mins >= s ? "active" : "future"
@@ -146,7 +146,7 @@ export function TodayView() {
 
       {/* Block Timeline */}
       <div className="flex gap-1.5">
-        {MDCAT_BLOCKS.map((_, i) => {
+        {NEET_SCHEDULE.map((_, i) => {
           const st = mounted ? getBlockStatus(i) : "future"
           return (
             <div
@@ -389,6 +389,9 @@ export function TodayView() {
         </CardContent>
       </Card>
 
+      {/* Pomodoro Timer */}
+      <PomodoroTimer onComplete={() => store.addPomodoro()} sessions={todayData.pomodoroSessions ?? 0} />
+
       {/* Meals Quick */}
       <Card>
         <CardContent className="p-4">
@@ -436,138 +439,118 @@ export function TodayView() {
         </CardContent>
       </Card>
 
-      {/* Fitness Quick */}
-      <FitnessQuickSection />
+      {/* Quick Note */}
+      <Card className={cn("border-l-[3px]", todayData.note ? "border-l-violet-500" : "border-l-transparent")}>
+        <CardContent className="p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <StickyNote className="w-4 h-4" style={{ color: todayData.note ? colorMap.violet : "var(--muted-foreground)" }} />
+            <span className={cn("font-mono text-[10px] tracking-widest uppercase", todayData.note ? "text-violet-500" : "text-muted-foreground/70")}>
+              Daily Note
+            </span>
+          </div>
+          <textarea
+            placeholder="Thoughts, reflections, or notes for today..."
+            value={todayData.note ?? ""}
+            onChange={(e) => store.setNote(e.target.value)}
+            className="w-full min-h-[100px] bg-muted/20 border border-border/60 rounded-lg p-3 text-sm resize-none focus:outline-none focus:border-violet-500/40 focus:ring-1 focus:ring-violet-500/20 transition-all placeholder:text-muted-foreground/50"
+          />
+          {todayData.note && (
+            <div className="mt-2 font-mono text-[10px] text-muted-foreground/50 text-right">
+              {todayData.note.length} chars / auto-saved
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
     </div>
   )
 }
 
-function FitnessQuickSection() {
-  const store = useStore()
-  const todayData = store.getTodayData()
-  const cp = store.getCurrentPhase()
-  const { stepsHit, cardioHit, done: fd, total: ft } = store.getFitDone()
+function PomodoroTimer({ onComplete, sessions }: { onComplete: () => void; sessions: number }) {
+  const [timeLeft, setTimeLeft] = useState(25 * 60)
+  const [isRunning, setIsRunning] = useState(false)
+  const [isBreak, setIsBreak] = useState(false)
+
+  useEffect(() => {
+    if (!isRunning) return
+    if (timeLeft <= 0) {
+      setIsRunning(false)
+      if (!isBreak) {
+        onComplete()
+        setIsBreak(true)
+        setTimeLeft(5 * 60)
+      } else {
+        setIsBreak(false)
+        setTimeLeft(25 * 60)
+      }
+      return
+    }
+    const interval = setInterval(() => setTimeLeft((t) => t - 1), 1000)
+    return () => clearInterval(interval)
+  }, [isRunning, timeLeft, isBreak, onComplete])
+
+  const mins = Math.floor(timeLeft / 60)
+  const secs = timeLeft % 60
+  const progress = isBreak ? ((5 * 60 - timeLeft) / (5 * 60)) * 100 : ((25 * 60 - timeLeft) / (25 * 60)) * 100
+  const color = isBreak ? colorMap.cyan : colorMap.coral
+
+  const reset = () => {
+    setIsRunning(false)
+    setIsBreak(false)
+    setTimeLeft(25 * 60)
+  }
 
   return (
-    <Card className="border-l-[3px]" style={{ borderLeftColor: colorMap[cp.color] || colorMap.orange }}>
+    <Card className="border-l-[3px]" style={{ borderLeftColor: color }}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: colorMap[cp.color] || colorMap.orange }}>
-            Fitness - {cp.name}
+          <div className="flex items-center gap-2">
+            <Timer className="w-4 h-4" style={{ color }} />
+            <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color }}>
+              {isBreak ? "Break Time" : "Focus Session"}
+            </span>
+          </div>
+          <span className="font-mono text-xs font-semibold" style={{ color: sessions > 0 ? colorMap.lime : "var(--muted-foreground)" }}>
+            {sessions} done
           </span>
-          <span className="font-mono text-xs font-semibold" style={{ color: fd === ft ? colorMap.lime : "var(--muted-foreground)" }}>
-            {fd}/{ft} done
-          </span>
         </div>
 
-        {/* Quick Stats */}
-        <div className={cn("grid gap-2 mb-4", cp.cardio > 0 ? "grid-cols-3" : "grid-cols-2")}>
-          <div className={cn(
-            "rounded-xl border p-3.5 text-center transition-all",
-            stepsHit && "border-orange-500/30 bg-orange-500/5"
-          )}>
-            <div className="text-lg font-semibold" style={{ color: stepsHit ? colorMap.orange : "var(--muted-foreground)" }}>
-              {todayData.steps > 0 ? (todayData.steps >= 1000 ? `${(todayData.steps / 1000).toFixed(1)}k` : todayData.steps) : "-"}
-            </div>
-            <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Steps{stepsHit && " ✓"}</div>
+        <div className="text-center mb-4">
+          <div
+            className="font-mono text-5xl font-bold tracking-wider"
+            style={{ color: isRunning ? color : "var(--foreground)" }}
+          >
+            {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
           </div>
-          {cp.cardio > 0 && (
-            <div className={cn(
-              "rounded-xl border p-3.5 text-center transition-all",
-              cardioHit && "border-cyan-500/30 bg-cyan-500/5"
-            )}>
-              <div className="text-lg font-semibold" style={{ color: cardioHit ? colorMap.cyan : "var(--muted-foreground)" }}>
-                {todayData.cardio > 0 ? `${todayData.cardio}m` : "-"}
-              </div>
-              <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Cardio{cardioHit && " ✓"}</div>
-            </div>
-          )}
-          <div className={cn(
-            "rounded-xl border p-3.5 text-center transition-all",
-            todayData.strength && "border-violet-500/30 bg-violet-500/5"
-          )}>
-            <div className="text-lg font-semibold" style={{ color: todayData.strength ? colorMap.violet : "var(--muted-foreground)" }}>
-              {todayData.strength ? "✓" : "-"}
-            </div>
-            <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Strength</div>
+          <div className="font-mono text-[10px] text-muted-foreground/60 mt-2">
+            {isBreak ? "5 min break" : "25 min focus"}
           </div>
         </div>
 
-        {/* Steps Target */}
-        <div className="mb-4">
-          <div className="font-mono text-[10px] text-muted-foreground/70 tracking-widest uppercase mb-2.5">
-            Steps Target: {cp.steps.toLocaleString()}
-          </div>
-          <div className="flex gap-1.5 mb-3">
-            {STEP_MS.map((m) => (
-              <button
-                key={m}
-                onClick={() => store.setSteps(m)}
-                className={cn(
-                  "flex-1 py-2.5 rounded-lg border font-mono text-[10px] font-medium transition-all active:scale-[0.98]",
-                  todayData.steps >= m
-                    ? "bg-orange-500/10 border-orange-500/40 text-orange-500"
-                    : "border-border/60 text-muted-foreground"
-                )}
-              >
-                {m >= 1000 ? `${m / 1000}k` : m}
-              </button>
-            ))}
-          </div>
-          {todayData.steps > 0 && (
-            <ProgressBar value={todayData.steps} max={cp.steps} color={colorMap.orange} height={4} />
-          )}
+        <ProgressBar value={progress} max={100} color={color} height={4} />
+
+        <div className="flex gap-2 mt-4">
+          <Button
+            variant="outline"
+            onClick={() => setIsRunning(!isRunning)}
+            className={cn(
+              "flex-1 h-11 font-mono text-sm gap-2 transition-all",
+              isRunning
+                ? "border-amber-500/40 bg-amber-500/10 text-amber-500 hover:bg-amber-500/15"
+                : "border-primary/40 bg-primary/10 text-primary hover:bg-primary/15"
+            )}
+          >
+            {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            {isRunning ? "Pause" : "Start"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={reset}
+            className="h-11 px-4 font-mono text-xs border-border/60 text-muted-foreground hover:text-foreground"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
         </div>
-
-        {/* Cardio Target */}
-        {cp.cardio > 0 && (
-          <div className="mb-4">
-            <div className="font-mono text-[10px] text-muted-foreground/70 tracking-widest uppercase mb-2.5">
-              Cardio Target: {cp.cardio} min
-            </div>
-            <div className="flex gap-1.5">
-              {CARDIO_MS.map((m) => (
-                <button
-                  key={m}
-                  onClick={() => store.setCardio(m)}
-                  className={cn(
-                    "flex-1 py-2.5 rounded-lg border font-mono text-[10px] font-medium transition-all active:scale-[0.98]",
-                    todayData.cardio >= m
-                      ? "bg-cyan-500/10 border-cyan-500/40 text-cyan-500"
-                      : "border-border/60 text-muted-foreground"
-                  )}
-                >
-                  {m}m
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Strength Toggle */}
-        <button
-          onClick={() => store.toggleStrength()}
-          className={cn(
-            "w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left active:scale-[0.99]",
-            todayData.strength ? "border-violet-500/40 bg-violet-500/5" : "border-border/60"
-          )}
-        >
-          <div className={cn(
-            "w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] transition-all flex-shrink-0",
-            todayData.strength ? "bg-violet-500 border-violet-500" : "border-border/80 bg-background"
-          )}>
-            {todayData.strength && <Check className="w-3 h-3 text-primary-foreground" />}
-          </div>
-          <Dumbbell className="w-5 h-5" style={{ color: todayData.strength ? colorMap.violet : "var(--muted-foreground)" }} />
-          <div className="flex-1">
-            <div className="text-sm font-medium" style={todayData.strength ? { color: colorMap.violet } : {}}>
-              Strength Training
-            </div>
-            <div className="font-mono text-[10px] text-muted-foreground/70 mt-0.5">
-              5x/week - Compound lifts - Progressive overload
-            </div>
-          </div>
-        </button>
       </CardContent>
     </Card>
   )
