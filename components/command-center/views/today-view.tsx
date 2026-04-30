@@ -8,7 +8,7 @@ import { ProgressBar } from "../progress-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon } from "lucide-react"
+import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon, Timer, Play, Pause, RotateCcw, StickyNote } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
@@ -389,6 +389,9 @@ export function TodayView() {
         </CardContent>
       </Card>
 
+      {/* Pomodoro Timer */}
+      <PomodoroTimer onComplete={() => store.addPomodoro()} sessions={todayData.pomodoroSessions ?? 0} />
+
       {/* Meals Quick */}
       <Card>
         <CardContent className="p-4">
@@ -436,7 +439,120 @@ export function TodayView() {
         </CardContent>
       </Card>
 
+      {/* Quick Note */}
+      <Card className={cn("border-l-[3px]", todayData.note ? "border-l-violet-500" : "border-l-transparent")}>
+        <CardContent className="p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <StickyNote className="w-4 h-4" style={{ color: todayData.note ? colorMap.violet : "var(--muted-foreground)" }} />
+            <span className={cn("font-mono text-[10px] tracking-widest uppercase", todayData.note ? "text-violet-500" : "text-muted-foreground/70")}>
+              Daily Note
+            </span>
+          </div>
+          <textarea
+            placeholder="Thoughts, reflections, or notes for today..."
+            value={todayData.note ?? ""}
+            onChange={(e) => store.setNote(e.target.value)}
+            className="w-full min-h-[100px] bg-muted/20 border border-border/60 rounded-lg p-3 text-sm resize-none focus:outline-none focus:border-violet-500/40 focus:ring-1 focus:ring-violet-500/20 transition-all placeholder:text-muted-foreground/50"
+          />
+          {todayData.note && (
+            <div className="mt-2 font-mono text-[10px] text-muted-foreground/50 text-right">
+              {todayData.note.length} chars / auto-saved
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
     </div>
+  )
+}
+
+function PomodoroTimer({ onComplete, sessions }: { onComplete: () => void; sessions: number }) {
+  const [timeLeft, setTimeLeft] = useState(25 * 60)
+  const [isRunning, setIsRunning] = useState(false)
+  const [isBreak, setIsBreak] = useState(false)
+
+  useEffect(() => {
+    if (!isRunning) return
+    if (timeLeft <= 0) {
+      setIsRunning(false)
+      if (!isBreak) {
+        onComplete()
+        setIsBreak(true)
+        setTimeLeft(5 * 60)
+      } else {
+        setIsBreak(false)
+        setTimeLeft(25 * 60)
+      }
+      return
+    }
+    const interval = setInterval(() => setTimeLeft((t) => t - 1), 1000)
+    return () => clearInterval(interval)
+  }, [isRunning, timeLeft, isBreak, onComplete])
+
+  const mins = Math.floor(timeLeft / 60)
+  const secs = timeLeft % 60
+  const progress = isBreak ? ((5 * 60 - timeLeft) / (5 * 60)) * 100 : ((25 * 60 - timeLeft) / (25 * 60)) * 100
+  const color = isBreak ? colorMap.cyan : colorMap.coral
+
+  const reset = () => {
+    setIsRunning(false)
+    setIsBreak(false)
+    setTimeLeft(25 * 60)
+  }
+
+  return (
+    <Card className="border-l-[3px]" style={{ borderLeftColor: color }}>
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Timer className="w-4 h-4" style={{ color }} />
+            <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color }}>
+              {isBreak ? "Break Time" : "Focus Session"}
+            </span>
+          </div>
+          <span className="font-mono text-xs font-semibold" style={{ color: sessions > 0 ? colorMap.lime : "var(--muted-foreground)" }}>
+            {sessions} done
+          </span>
+        </div>
+
+        <div className="text-center mb-4">
+          <div
+            className="font-mono text-5xl font-bold tracking-wider"
+            style={{ color: isRunning ? color : "var(--foreground)" }}
+          >
+            {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+          </div>
+          <div className="font-mono text-[10px] text-muted-foreground/60 mt-2">
+            {isBreak ? "5 min break" : "25 min focus"}
+          </div>
+        </div>
+
+        <ProgressBar value={progress} max={100} color={color} height={4} />
+
+        <div className="flex gap-2 mt-4">
+          <Button
+            variant="outline"
+            onClick={() => setIsRunning(!isRunning)}
+            className={cn(
+              "flex-1 h-11 font-mono text-sm gap-2 transition-all",
+              isRunning
+                ? "border-amber-500/40 bg-amber-500/10 text-amber-500 hover:bg-amber-500/15"
+                : "border-primary/40 bg-primary/10 text-primary hover:bg-primary/15"
+            )}
+          >
+            {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            {isRunning ? "Pause" : "Start"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={reset}
+            className="h-11 px-4 font-mono text-xs border-border/60 text-muted-foreground hover:text-foreground"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 

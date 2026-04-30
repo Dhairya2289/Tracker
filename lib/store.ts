@@ -18,6 +18,9 @@ interface DayData {
   dayType: "bad" | "normal" | "peak"
   focus: string
   mcqs: number
+  water: number
+  pomodoroSessions: number
+  note: string
 }
 
 interface Meta {
@@ -60,6 +63,9 @@ interface Actions {
   setMcqs: (n: number) => void
   setSteps: (n: number) => void
   setCardio: (n: number) => void
+  setWater: (n: number) => void
+  addPomodoro: () => void
+  setNote: (note: string) => void
   setFitPhase: (id: number) => void
   saveWeight: (w: number) => void
   deleteWeight: (date: string) => void
@@ -98,6 +104,9 @@ const defaultDayData = (): DayData => ({
   dayType: "normal",
   focus: "",
   mcqs: 0,
+  water: 0,
+  pomodoroSessions: 0,
+  note: "",
 })
 
 const defaultMeta = (): Meta => ({
@@ -199,6 +208,20 @@ export const useStore = create<State & Actions>()(
       setCardio: (n) => {
         const today = get().getTodayData()
         get().setTodayData({ cardio: today.cardio === n ? 0 : n })
+      },
+
+      setWater: (n) => {
+        const today = get().getTodayData()
+        get().setTodayData({ water: today.water === n ? Math.max(0, n - 1) : n })
+      },
+
+      addPomodoro: () => {
+        const today = get().getTodayData()
+        get().setTodayData({ pomodoroSessions: today.pomodoroSessions + 1 })
+      },
+
+      setNote: (note) => {
+        get().setTodayData({ note })
       },
 
       setFitPhase: (id) => {

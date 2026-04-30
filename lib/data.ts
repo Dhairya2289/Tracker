@@ -113,34 +113,55 @@ export const MDCAT_BLOCK_INFO = [
   { n: 6, dur: "2H", task: "Revision (Same Day Topics)", time: "19:30-21:30" },
 ] as const
 
-export const PLAN = [
-  { day: 1, date: "2025-05-01", phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "1a", text: "Genetics Part 1 - 3h lecture", subj: "bio" }, { id: "1b", text: "NCERT + PYQs - Genetics basics", subj: "bio" }, { id: "1c", text: "Chemistry: Solutions (start)", subj: "chem" }, { id: "1d", text: "English: Prepositions / basic grammar", subj: "eng" }, { id: "1e", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 2, date: "2025-05-02", phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "2a", text: "Genetics Part 2", subj: "bio" }, { id: "2b", text: "PYQs - Genetics", subj: "bio" }, { id: "2c", text: "Chemistry: Solutions continue", subj: "chem" }, { id: "2d", text: "English: Idioms + vocab", subj: "eng" }, { id: "2e", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 3, date: "2025-05-03", phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "3a", text: "Genetics Part 3", subj: "bio" }, { id: "3b", text: "Full Genetics PYQs", subj: "bio" }, { id: "3c", text: "Chemistry: Electrochemistry (start)", subj: "chem" }, { id: "3d", text: "English: Sentence rearrangement", subj: "eng" }, { id: "3e", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 4, date: "2025-05-04", phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "4a", text: "Genetics FULL revision - Very Important", subj: "bio" }, { id: "4b", text: "Chemistry: Electrochemistry continue", subj: "chem" }, { id: "4c", text: "English: One word substitution", subj: "eng" }, { id: "4d", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 5, date: "2025-05-05", phase: "PHASE 1", section: "ECOLOGY", tasks: [{ id: "5a", text: "Ecology lecture", subj: "bio" }, { id: "5b", text: "NCERT line by line - VERY IMPORTANT", subj: "bio" }, { id: "5c", text: "Chemistry: Electrochemistry finish", subj: "chem" }, { id: "5d", text: "English: Voice", subj: "eng" }, { id: "5e", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 6, date: "2025-05-06", phase: "PHASE 1", section: "ECOLOGY", tasks: [{ id: "6a", text: "Ecology PYQs + revision", subj: "bio" }, { id: "6b", text: "Chemistry: Chemical Kinetics (start)", subj: "chem" }, { id: "6c", text: "English: Tenses", subj: "eng" }, { id: "6d", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 7, date: "2025-05-07", phase: "PHASE 1", section: "BIOTECH", tasks: [{ id: "7a", text: "Biotech lecture", subj: "bio" }, { id: "7b", text: "NCERT + diagrams", subj: "bio" }, { id: "7c", text: "Chemistry: Chemical Kinetics continue", subj: "chem" }, { id: "7d", text: "English: Synonyms / antonyms", subj: "eng" }, { id: "7e", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 8, date: "2025-05-08", phase: "PHASE 1", section: "BIOTECH", tasks: [{ id: "8a", text: "Biotech PYQs + revision", subj: "bio" }, { id: "8b", text: "Chemistry: Biomolecules (easy scoring)", subj: "chem" }, { id: "8c", text: "GAT: Logical reasoning start", subj: "gat" }, { id: "8d", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 9, date: "2025-05-09", phase: "PHASE 1", section: "HUMAN WELFARE", tasks: [{ id: "9a", text: "Full lecture + NCERT", subj: "bio" }, { id: "9b", text: "PYQs same day", subj: "bio" }, { id: "9c", text: "Chemistry: Biomolecules finish", subj: "chem" }, { id: "9d", text: "GAT: Quant basics (percentage, ratio)", subj: "gat" }, { id: "9e", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 10, date: "2025-05-10", phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "10a", text: "Chemistry: Alcohol Phenol Ether", subj: "chem" }, { id: "10b", text: "English: Revision", subj: "eng" }, { id: "10c", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 11, date: "2025-05-11", phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "11a", text: "Chemistry: Aldehyde Ketone", subj: "chem" }, { id: "11b", text: "GAT: Profit / Loss", subj: "gat" }, { id: "11c", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 12, date: "2025-05-12", phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "12a", text: "Chemistry: Amines", subj: "chem" }, { id: "12b", text: "English mock", subj: "eng" }, { id: "12c", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 13, date: "2025-05-13", phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "13a", text: "Chemistry: Haloalkanes", subj: "chem" }, { id: "13b", text: "GAT: SI / CI", subj: "gat" }, { id: "13c", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 14, date: "2025-05-14", phase: "PHASE 1", section: "INORGANIC", tasks: [{ id: "14a", text: "Chemistry: d&f block (selective)", subj: "chem" }, { id: "14b", text: "Biology: Full revision start", subj: "bio" }, { id: "14c", text: "Revision: Same-day topics", subj: "rev" }] },
-  { day: 15, date: "2025-05-15", phase: "PHASE 1", section: "INORGANIC", tasks: [{ id: "15a", text: "Chemistry: Coordination (important parts)", subj: "chem" }, { id: "15b", text: "Chemistry: Full revision", subj: "chem" }, { id: "15c", text: "Revision: All covered topics", subj: "rev" }] },
-  { day: 16, date: "2025-05-16", phase: "PHASE 2", section: "FINAL PUSH", tasks: [{ id: "16a", text: "Biology FULL revision (all chapters)", subj: "bio" }, { id: "16b", text: "PYQs mixed", subj: "bio" }, { id: "16c", text: "Revision: All biology", subj: "rev" }] },
-  { day: 17, date: "2025-05-17", phase: "PHASE 2", section: "FINAL PUSH", tasks: [{ id: "17a", text: "Chemistry FULL revision", subj: "chem" }, { id: "17b", text: "English mocks (2-3)", subj: "eng" }, { id: "17c", text: "Revision: All chemistry", subj: "rev" }] },
-  { day: 18, date: "2025-05-18", phase: "PHASE 2", section: "BEFORE EXAM", tasks: [{ id: "18a", text: "Light revision only - no new topics", subj: "rev" }, { id: "18b", text: "NCERT skim", subj: "bio" }, { id: "18c", text: "Rest & mental prep", subj: "rev" }] },
-  { day: 19, date: "2025-05-19", phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "19a", text: "Physics: Current Electricity", subj: "phys" }, { id: "19b", text: "GAT: Weak area review", subj: "gat" }] },
-  { day: 20, date: "2025-05-20", phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "20a", text: "Physics: Optics", subj: "phys" }, { id: "20b", text: "GAT: Practice set", subj: "gat" }] },
-  { day: 21, date: "2025-05-21", phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "21a", text: "Physics: Modern Physics", subj: "phys" }, { id: "21b", text: "GAT: Full mock", subj: "gat" }] },
-  { day: 22, date: "2025-05-22", phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "22a", text: "Physics PYQs", subj: "phys" }, { id: "22b", text: "Weak areas review", subj: "rev" }] },
-  { day: 23, date: "2025-05-23", phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "23a", text: "Physics PYQs continued", subj: "phys" }, { id: "23b", text: "Final weak areas", subj: "rev" }] },
-  { day: 24, date: "2025-05-24", phase: "PHASE 3", section: "FULL MOCK", tasks: [{ id: "24a", text: "Full mock test", subj: "rev" }, { id: "24b", text: "Analysis & correction session", subj: "rev" }] },
-] as const
+// Generate PLAN dates dynamically starting from today
+function generatePlanDates() {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  
+  const basePlan = [
+    { day: 1, phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "1a", text: "Genetics Part 1 - 3h lecture", subj: "bio" }, { id: "1b", text: "NCERT + PYQs - Genetics basics", subj: "bio" }, { id: "1c", text: "Chemistry: Solutions (start)", subj: "chem" }, { id: "1d", text: "English: Prepositions / basic grammar", subj: "eng" }, { id: "1e", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 2, phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "2a", text: "Genetics Part 2", subj: "bio" }, { id: "2b", text: "PYQs - Genetics", subj: "bio" }, { id: "2c", text: "Chemistry: Solutions continue", subj: "chem" }, { id: "2d", text: "English: Idioms + vocab", subj: "eng" }, { id: "2e", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 3, phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "3a", text: "Genetics Part 3", subj: "bio" }, { id: "3b", text: "Full Genetics PYQs", subj: "bio" }, { id: "3c", text: "Chemistry: Electrochemistry (start)", subj: "chem" }, { id: "3d", text: "English: Sentence rearrangement", subj: "eng" }, { id: "3e", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 4, phase: "PHASE 1", section: "GENETICS", tasks: [{ id: "4a", text: "Genetics FULL revision - Very Important", subj: "bio" }, { id: "4b", text: "Chemistry: Electrochemistry continue", subj: "chem" }, { id: "4c", text: "English: One word substitution", subj: "eng" }, { id: "4d", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 5, phase: "PHASE 1", section: "ECOLOGY", tasks: [{ id: "5a", text: "Ecology lecture", subj: "bio" }, { id: "5b", text: "NCERT line by line - VERY IMPORTANT", subj: "bio" }, { id: "5c", text: "Chemistry: Electrochemistry finish", subj: "chem" }, { id: "5d", text: "English: Voice", subj: "eng" }, { id: "5e", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 6, phase: "PHASE 1", section: "ECOLOGY", tasks: [{ id: "6a", text: "Ecology PYQs + revision", subj: "bio" }, { id: "6b", text: "Chemistry: Chemical Kinetics (start)", subj: "chem" }, { id: "6c", text: "English: Tenses", subj: "eng" }, { id: "6d", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 7, phase: "PHASE 1", section: "BIOTECH", tasks: [{ id: "7a", text: "Biotech lecture", subj: "bio" }, { id: "7b", text: "NCERT + diagrams", subj: "bio" }, { id: "7c", text: "Chemistry: Chemical Kinetics continue", subj: "chem" }, { id: "7d", text: "English: Synonyms / antonyms", subj: "eng" }, { id: "7e", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 8, phase: "PHASE 1", section: "BIOTECH", tasks: [{ id: "8a", text: "Biotech PYQs + revision", subj: "bio" }, { id: "8b", text: "Chemistry: Biomolecules (easy scoring)", subj: "chem" }, { id: "8c", text: "GAT: Logical reasoning start", subj: "gat" }, { id: "8d", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 9, phase: "PHASE 1", section: "HUMAN WELFARE", tasks: [{ id: "9a", text: "Full lecture + NCERT", subj: "bio" }, { id: "9b", text: "PYQs same day", subj: "bio" }, { id: "9c", text: "Chemistry: Biomolecules finish", subj: "chem" }, { id: "9d", text: "GAT: Quant basics (percentage, ratio)", subj: "gat" }, { id: "9e", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 10, phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "10a", text: "Chemistry: Alcohol Phenol Ether", subj: "chem" }, { id: "10b", text: "English: Revision", subj: "eng" }, { id: "10c", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 11, phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "11a", text: "Chemistry: Aldehyde Ketone", subj: "chem" }, { id: "11b", text: "GAT: Profit / Loss", subj: "gat" }, { id: "11c", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 12, phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "12a", text: "Chemistry: Amines", subj: "chem" }, { id: "12b", text: "English mock", subj: "eng" }, { id: "12c", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 13, phase: "PHASE 1", section: "ORGANIC BLOCK", tasks: [{ id: "13a", text: "Chemistry: Haloalkanes", subj: "chem" }, { id: "13b", text: "GAT: SI / CI", subj: "gat" }, { id: "13c", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 14, phase: "PHASE 1", section: "INORGANIC", tasks: [{ id: "14a", text: "Chemistry: d&f block (selective)", subj: "chem" }, { id: "14b", text: "Biology: Full revision start", subj: "bio" }, { id: "14c", text: "Revision: Same-day topics", subj: "rev" }] },
+    { day: 15, phase: "PHASE 1", section: "INORGANIC", tasks: [{ id: "15a", text: "Chemistry: Coordination (important parts)", subj: "chem" }, { id: "15b", text: "Chemistry: Full revision", subj: "chem" }, { id: "15c", text: "Revision: All covered topics", subj: "rev" }] },
+    { day: 16, phase: "PHASE 2", section: "FINAL PUSH", tasks: [{ id: "16a", text: "Biology FULL revision (all chapters)", subj: "bio" }, { id: "16b", text: "PYQs mixed", subj: "bio" }, { id: "16c", text: "Revision: All biology", subj: "rev" }] },
+    { day: 17, phase: "PHASE 2", section: "FINAL PUSH", tasks: [{ id: "17a", text: "Chemistry FULL revision", subj: "chem" }, { id: "17b", text: "English mocks (2-3)", subj: "eng" }, { id: "17c", text: "Revision: All chemistry", subj: "rev" }] },
+    { day: 18, phase: "PHASE 2", section: "BEFORE EXAM", tasks: [{ id: "18a", text: "Light revision only - no new topics", subj: "rev" }, { id: "18b", text: "NCERT skim", subj: "bio" }, { id: "18c", text: "Rest & mental prep", subj: "rev" }] },
+    { day: 19, phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "19a", text: "Physics: Current Electricity", subj: "phys" }, { id: "19b", text: "GAT: Weak area review", subj: "gat" }] },
+    { day: 20, phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "20a", text: "Physics: Optics", subj: "phys" }, { id: "20b", text: "GAT: Practice set", subj: "gat" }] },
+    { day: 21, phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "21a", text: "Physics: Modern Physics", subj: "phys" }, { id: "21b", text: "GAT: Full mock", subj: "gat" }] },
+    { day: 22, phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "22a", text: "Physics PYQs", subj: "phys" }, { id: "22b", text: "Weak areas review", subj: "rev" }] },
+    { day: 23, phase: "PHASE 3", section: "PHYSICS + GAT", tasks: [{ id: "23a", text: "Physics PYQs continued", subj: "phys" }, { id: "23b", text: "Final weak areas", subj: "rev" }] },
+    { day: 24, phase: "PHASE 3", section: "FULL MOCK", tasks: [{ id: "24a", text: "Full mock test", subj: "rev" }, { id: "24b", text: "Analysis & correction session", subj: "rev" }] },
+  ]
+  
+  return basePlan.map((item, index) => {
+    const date = new Date(today)
+    date.setDate(today.getDate() + index)
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+    return { ...item, date: dateStr }
+  })
+}
 
-export const EXAM_DATE = new Date("2025-05-19T00:00:00")
+export const PLAN = generatePlanDates()
+
+// Exam date is 19 days from start (Day 19 in the plan)
+export const EXAM_DATE = (() => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  today.setDate(today.getDate() + 18) // Day 19 = index 18
+  return today
+})()
 
 export const SUBJ_COLOR: Record<string, string> = {
   bio: "lime",
