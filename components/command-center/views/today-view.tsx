@@ -65,8 +65,10 @@ export function TodayView() {
   const store = useStore()
   const [currentBlock, setCurrentBlock] = useState<ReturnType<typeof getCurrentMdcatBlock>>(null)
   const [expandedBlocks, setExpandedBlocks] = useState<Set<number>>(new Set())
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const update = () => setCurrentBlock(getCurrentMdcatBlock())
     update()
     const interval = setInterval(update, 30000)
@@ -145,7 +147,7 @@ export function TodayView() {
       {/* Block Timeline */}
       <div className="flex gap-1.5">
         {MDCAT_BLOCKS.map((_, i) => {
-          const st = getBlockStatus(i)
+          const st = mounted ? getBlockStatus(i) : "future"
           return (
             <div
               key={i}
@@ -383,23 +385,7 @@ export function TodayView() {
               -10
             </Button>
           </div>
-          <div className="flex gap-2 mt-2">
-            <Input
-              type="number"
-              placeholder="Set exact number"
-              min={0}
-              className="flex-1 font-mono bg-muted/20 h-10"
-              onChange={(e) => {
-                const v = parseInt(e.target.value)
-                if (!isNaN(v) && v >= 0) store.setMcqs(v)
-              }}
-            />
-            {todayData.mcqs > 0 && (
-              <Button variant="ghost" size="sm" onClick={() => store.setMcqs(0)} className="font-mono text-xs text-muted-foreground h-10">
-                Reset
-              </Button>
-            )}
-          </div>
+          <McqExactInput currentValue={todayData.mcqs} onSet={store.setMcqs} />
         </CardContent>
       </Card>
 
@@ -584,5 +570,64 @@ function FitnessQuickSection() {
         </button>
       </CardContent>
     </Card>
+  )
+}
+
+function McqExactInput({ currentValue, onSet }: { currentValue: number; onSet: (n: number) => void }) {
+  const [inputValue, setInputValue] = useState(currentValue > 0 ? String(currentValue) : "")
+  const [showConfirm, setShowConfirm] = useState(false)
+
+  const handleSubmit = () => {
+    const v = parseInt(inputValue)
+    if (!isNaN(v) && v >= 0) {
+      onSet(v)
+      setShowConfirm(true)
+      setTimeout(() => setShowConfirm(false), 1500)
+    }
+  }
+
+  return (
+    <div className="flex gap-2 mt-2">
+      <div className="relative flex-1">
+        <Input
+          type="number"
+          placeholder="Set exact number"
+          min={0}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          className={cn(
+            "font-mono bg-muted/20 h-10 pr-16 transition-all",
+            showConfirm && "border-primary/40 bg-primary/5"
+          )}
+        />
+        {showConfirm && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[10px] text-primary font-semibold">
+            Set!
+          </span>
+        )}
+      </div>
+      <Button 
+        variant="outline" 
+        size="sm" 
+        onClick={handleSubmit}
+        className="font-mono text-xs h-10 px-4 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+      >
+        Set
+      </Button>
+      {currentValue > 0 && (
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => {
+            onSet(0)
+            setInputValue("")
+          }} 
+          className="font-mono text-xs text-muted-foreground h-10"
+        >
+          Clear
+        </Button>
+      )}
+    </div>
   )
 }

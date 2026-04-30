@@ -84,6 +84,8 @@ interface Actions {
   mdcatTotalDone: () => number
   mdcatTotalTasks: () => number
   updateStreak: () => void
+  resetToday: () => void
+  resetAllData: () => void
 }
 
 const defaultDayData = (): DayData => ({
@@ -334,6 +336,32 @@ export const useStore = create<State & Actions>()(
         set((state) => ({
           history: { ...state.history, [todayKey()]: get().getOverallPct() },
         }))
+      },
+
+      resetToday: () => {
+        const key = todayKey()
+        set((state) => ({
+          days: {
+            ...state.days,
+            [key]: defaultDayData(),
+          },
+        }))
+        get().showToast("Today's progress reset")
+      },
+
+      resetAllData: () => {
+        set({
+          mdcatDone: {},
+          mdcatOpen: [],
+          history: {},
+          weights: [],
+          meta: defaultMeta(),
+          days: {},
+          currentView: "today",
+          expandedRule: null,
+          expandedMeal: null,
+        })
+        get().showToast("All data cleared")
       },
     }),
     {

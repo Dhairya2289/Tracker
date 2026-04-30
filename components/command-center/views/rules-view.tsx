@@ -1,9 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import { useStore } from "@/lib/store"
 import { SYSTEM_RULES, MDCAT_BLOCK_INFO } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
-import { ChevronDown, ChevronUp, Clock, Smartphone, BookOpen, FileText } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { ChevronDown, ChevronUp, Clock, Smartphone, BookOpen, FileText, RotateCcw, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
@@ -139,6 +141,107 @@ export function RulesView() {
           <div className="text-sm text-muted-foreground">Ignore this = watching lectures with zero retention.</div>
         </CardContent>
       </Card>
+
+      {/* Reset & Data Management */}
+      <ResetSection />
     </div>
+  )
+}
+
+function ResetSection() {
+  const store = useStore()
+  const [showConfirmToday, setShowConfirmToday] = useState(false)
+  const [showConfirmAll, setShowConfirmAll] = useState(false)
+
+  return (
+    <Card className="border-border/40">
+      <CardContent className="p-4">
+        <span className="font-mono text-[10px] text-muted-foreground/70 tracking-widest uppercase block mb-4">Data Management</span>
+        
+        {/* Reset Today */}
+        <div className="mb-4">
+          {!showConfirmToday ? (
+            <Button 
+              variant="outline" 
+              className="w-full justify-start gap-3 h-12 border-border/60"
+              onClick={() => setShowConfirmToday(true)}
+            >
+              <RotateCcw className="w-4 h-4 text-amber-500" />
+              <div className="text-left">
+                <div className="text-sm font-medium">Reset Today&apos;s Progress</div>
+                <div className="font-mono text-[10px] text-muted-foreground/70">Clear all progress for today only</div>
+              </div>
+            </Button>
+          ) : (
+            <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-3">
+              <div className="text-sm font-medium text-amber-500">Reset today&apos;s progress?</div>
+              <div className="text-xs text-muted-foreground">This will clear all blocks, meals, MCQs, and fitness for today.</div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 border-border/60"
+                  onClick={() => setShowConfirmToday(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 border-amber-500/30 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20"
+                  onClick={() => {
+                    store.resetToday()
+                    setShowConfirmToday(false)
+                  }}
+                >
+                  Reset Today
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Clear All Data */}
+        {!showConfirmAll ? (
+          <Button 
+            variant="outline" 
+            className="w-full justify-start gap-3 h-12 border-destructive/20 bg-destructive/5 hover:bg-destructive/10"
+            onClick={() => setShowConfirmAll(true)}
+          >
+            <Trash2 className="w-4 h-4 text-destructive" />
+            <div className="text-left">
+              <div className="text-sm font-medium text-destructive">Clear All Data</div>
+              <div className="font-mono text-[10px] text-muted-foreground/70">Permanently delete everything</div>
+            </div>
+          </Button>
+        ) : (
+          <div className="p-3.5 rounded-xl border border-destructive/30 bg-destructive/5 space-y-3">
+            <div className="text-sm font-medium text-destructive">Delete all data permanently?</div>
+            <div className="text-xs text-muted-foreground">This will remove ALL history, streaks, MDCAT progress, weights, and settings. This cannot be undone.</div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 border-border/60"
+                onClick={() => setShowConfirmAll(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/20"
+                onClick={() => {
+                  store.resetAllData()
+                  setShowConfirmAll(false)
+                }}
+              >
+                Delete All
+              </Button>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
