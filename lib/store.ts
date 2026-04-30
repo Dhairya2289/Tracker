@@ -62,6 +62,7 @@ interface Actions {
   setCardio: (n: number) => void
   setFitPhase: (id: number) => void
   saveWeight: (w: number) => void
+  deleteWeight: (date: string) => void
   setView: (view: string) => void
   setExpandedRule: (num: string | null) => void
   setExpandedMeal: (id: number | null) => void
@@ -212,6 +213,13 @@ export const useStore = create<State & Actions>()(
             { date: key, weight: w },
           ].sort((a, b) => a.date.localeCompare(b.date)),
         }))
+      },
+
+      deleteWeight: (date) => {
+        set((state) => ({
+          weights: state.weights.filter((x) => x.date !== date),
+        }))
+        get().showToast("Weight entry deleted")
       },
 
       setView: (view) => set({ currentView: view }),
