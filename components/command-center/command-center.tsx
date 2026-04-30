@@ -10,6 +10,8 @@ import { DietView } from "./views/diet-view"
 import { BodyView } from "./views/body-view"
 import { StatsView } from "./views/stats-view"
 import { RulesView } from "./views/rules-view"
+import { SavedFlash } from "./saved-flash"
+import { Toast } from "./toast"
 
 export function CommandCenter() {
   const { currentView } = useStore()
@@ -22,6 +24,14 @@ export function CommandCenter() {
         style={{
           backgroundImage: "radial-gradient(circle, oklch(0.35 0.01 260) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
+        }}
+      />
+
+      {/* Subtle vignette */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 50%, rgba(2,2,8,0.5) 100%)",
         }}
       />
 
@@ -39,6 +49,8 @@ export function CommandCenter() {
         </main>
 
         <BottomNav />
+        <SavedFlash />
+        <Toast />
       </div>
     </div>
   )

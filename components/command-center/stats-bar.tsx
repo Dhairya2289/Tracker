@@ -35,7 +35,7 @@ export function StatsBar() {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="relative py-3.5 px-2 text-center"
+          className="relative py-3.5 px-2 text-center border-r border-border/30 last:border-r-0"
         >
           <div
             className="text-xl font-semibold leading-none tracking-tight"
@@ -46,6 +46,15 @@ export function StatsBar() {
           <div className="font-mono text-[10px] text-muted-foreground/80 tracking-wider uppercase mt-1.5">
             {stat.label}
           </div>
+          {/* Colored glow indicator */}
+          <div
+            className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-t-sm"
+            style={{
+              background: stat.color,
+              boxShadow: `0 0 6px ${stat.color}`,
+              opacity: 0.9,
+            }}
+          />
         </div>
       ))}
     </div>

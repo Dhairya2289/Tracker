@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Target } from "lucide-react"
+import { Zap } from "lucide-react"
 import { EXAM_DATE } from "@/lib/data"
 
 export function Header() {
-  const [time, setTime] = useState<string>("--:--")
+  const [time, setTime] = useState<string>("--:--:--")
   const [daysLeft, setDaysLeft] = useState<number | null>(null)
 
   useEffect(() => {
@@ -24,18 +24,26 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-lg border-b border-border/60">
-      <div className="flex items-center justify-between px-4 py-3.5">
+      <div className="flex items-center justify-between px-4 py-3">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <Target className="w-5 h-5 text-primary" />
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-[34px] h-[34px] border-2 border-destructive flex items-center justify-center flex-shrink-0"
+            style={{
+              boxShadow: "0 0 12px rgba(255,58,92,0.3), inset 0 0 8px rgba(255,58,92,0.1)",
+            }}
+          >
+            <Zap className="w-4 h-4 text-destructive" />
           </div>
           <div>
-            <div className="font-semibold text-foreground tracking-tight text-base leading-tight">
-              Command Center
+            <div
+              className="font-semibold text-foreground tracking-[4px] text-lg leading-none uppercase"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              COMMAND
             </div>
-            <div className="font-mono text-[11px] text-muted-foreground tracking-wide">
-              MDCAT 2025
+            <div className="font-mono text-[10px] text-muted-foreground tracking-[2px] mt-0.5">
+              CENTER · MDCAT
             </div>
           </div>
         </div>

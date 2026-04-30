@@ -42,6 +42,8 @@ interface State {
   currentView: string
   expandedRule: string | null
   expandedMeal: number | null
+  showSaved: boolean
+  toast: string | null
 }
 
 interface Actions {
@@ -63,6 +65,8 @@ interface Actions {
   setView: (view: string) => void
   setExpandedRule: (num: string | null) => void
   setExpandedMeal: (id: number | null) => void
+  flashSaved: () => void
+  showToast: (msg: string) => void
   getOverallPct: () => number
   getStudyPct: () => number
   getDietPct: () => number
@@ -112,6 +116,8 @@ export const useStore = create<State & Actions>()(
       currentView: "today",
       expandedRule: null,
       expandedMeal: null,
+      showSaved: false,
+      toast: null,
 
       getTodayData: () => {
         const key = todayKey()
@@ -127,6 +133,7 @@ export const useStore = create<State & Actions>()(
           },
         }))
         get().updateStreak()
+        get().flashSaved()
       },
 
       toggleMdcatTask: (id) => {
@@ -134,6 +141,7 @@ export const useStore = create<State & Actions>()(
           mdcatDone: { ...state.mdcatDone, [id]: !state.mdcatDone[id] },
         }))
         get().updateStreak()
+        get().flashSaved()
       },
 
       toggleDayOpen: (day) => {
@@ -207,6 +215,16 @@ export const useStore = create<State & Actions>()(
       setView: (view) => set({ currentView: view }),
       setExpandedRule: (num) => set({ expandedRule: num }),
       setExpandedMeal: (id) => set({ expandedMeal: id }),
+
+      flashSaved: () => {
+        set({ showSaved: true })
+        setTimeout(() => set({ showSaved: false }), 900)
+      },
+
+      showToast: (msg) => {
+        set({ toast: msg })
+        setTimeout(() => set({ toast: null }), 2000)
+      },
 
       getDayTargets: () => {
         const mode = get().getTodayData().dayType || "normal"
