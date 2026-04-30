@@ -21,7 +21,7 @@ export function ProgressBar({
 
   return (
     <div
-      className={cn("w-full rounded-full overflow-hidden bg-muted/30", className)}
+      className={cn("w-full rounded-full overflow-hidden bg-muted/20", className)}
       style={{ height }}
     >
       <div
@@ -29,7 +29,6 @@ export function ProgressBar({
         style={{
           width: `${pct}%`,
           background: color,
-          boxShadow: `0 0 8px ${color}40`,
         }}
       />
     </div>

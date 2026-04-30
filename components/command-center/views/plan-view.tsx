@@ -8,12 +8,12 @@ import { Check, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
-  lime: "oklch(0.75 0.18 145)",
-  coral: "oklch(0.70 0.20 25)",
-  cyan: "oklch(0.78 0.12 200)",
-  amber: "oklch(0.78 0.15 85)",
-  violet: "oklch(0.72 0.15 290)",
-  orange: "oklch(0.75 0.15 55)",
+  lime: "oklch(0.68 0.14 155)",
+  coral: "oklch(0.65 0.16 25)",
+  cyan: "oklch(0.72 0.10 200)",
+  amber: "oklch(0.72 0.12 85)",
+  violet: "oklch(0.68 0.12 280)",
+  orange: "oklch(0.70 0.12 55)",
 }
 
 function todayKey() {
@@ -32,14 +32,14 @@ export function PlanView() {
   let lastSection = ""
 
   return (
-    <div className="p-4 space-y-3 pb-20">
+    <div className="px-4 py-5 space-y-4 pb-24">
       {/* Progress Summary */}
       <Card>
-        <CardContent className="p-4 text-center">
-          <div className="font-mono text-[10px] text-muted-foreground tracking-widest mb-2">24-DAY PLAN PROGRESS</div>
-          <div className="text-4xl font-bold text-primary leading-none">{planPct}%</div>
-          <div className="font-mono text-xs text-muted-foreground mt-1">{totalDone} of {totalTasks} tasks complete</div>
-          <ProgressBar value={totalDone} max={totalTasks} color={colorMap.lime} height={6} className="mt-3" />
+        <CardContent className="p-5 text-center">
+          <div className="font-mono text-[10px] text-muted-foreground/70 tracking-widest mb-3 uppercase">24-Day Plan Progress</div>
+          <div className="text-4xl font-bold text-primary leading-none tracking-tight">{planPct}%</div>
+          <div className="font-mono text-xs text-muted-foreground mt-2">{totalDone} of {totalTasks} tasks complete</div>
+          <ProgressBar value={totalDone} max={totalTasks} color={colorMap.lime} height={5} className="mt-4" />
         </CardContent>
       </Card>
 
@@ -64,21 +64,21 @@ export function PlanView() {
           <div key={day.day}>
             {/* Phase Divider */}
             {showPhase && (
-              <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 h-px bg-border" />
+              <div className="flex items-center gap-3 my-6">
+                <div className="flex-1 h-px bg-border/60" />
                 <div
-                  className="font-semibold text-sm tracking-widest px-3 py-1 rounded border"
-                  style={{ color: phaseColor, borderColor: `${phaseColor}60`, background: `${phaseColor}10` }}
+                  className="font-semibold text-xs tracking-widest px-4 py-1.5 rounded-full border"
+                  style={{ color: phaseColor, borderColor: `${phaseColor}40`, background: `${phaseColor}10` }}
                 >
                   {day.phase}
                 </div>
-                <div className="flex-1 h-px bg-border" />
+                <div className="flex-1 h-px bg-border/60" />
               </div>
             )}
 
             {/* Section Label */}
             {showSection && (
-              <div className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase my-3">
+              <div className="font-mono text-[10px] text-muted-foreground/60 tracking-widest uppercase my-4">
                 // {day.section}
               </div>
             )}
@@ -86,58 +86,62 @@ export function PlanView() {
             {/* Day Row */}
             <div
               className={cn(
-                "rounded-lg border overflow-hidden transition-all",
-                isToday && "border-destructive/50 shadow-[0_0_20px_rgba(239,68,68,0.1)]",
-                isDone && "border-primary/30",
-                !isToday && !isDone && "border-border"
+                "rounded-xl border overflow-hidden transition-all",
+                isToday && "border-destructive/40",
+                isDone && "border-primary/25",
+                !isToday && !isDone && "border-border/60"
               )}
             >
               <button
                 onClick={() => store.toggleDayOpen(day.day)}
-                className="w-full flex items-center gap-3 p-3"
+                className="w-full flex items-center gap-3 p-3.5 active:opacity-80"
               >
                 <div
                   className={cn(
-                    "text-2xl font-bold min-w-[36px]",
-                    isToday ? "text-destructive" : isDone ? "text-primary" : "text-muted-foreground"
+                    "text-xl font-bold min-w-[32px] tabular-nums",
+                    isToday ? "text-destructive" : isDone ? "text-primary" : "text-muted-foreground/50"
                   )}
                 >
                   {String(day.day).padStart(2, "0")}
                 </div>
                 <div className="flex-1 text-left">
-                  <div className="font-mono text-[10px] text-muted-foreground flex items-center gap-2">
-                    {dateObj.getDate()} {monthNames[dateObj.getMonth()]}
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] text-muted-foreground/70">
+                      {dateObj.getDate()} {monthNames[dateObj.getMonth()]}
+                    </span>
                     {isToday && (
-                      <span className="bg-destructive text-white text-[9px] font-bold px-1.5 py-0.5 rounded tracking-widest">
+                      <span className="bg-destructive text-white text-[9px] font-semibold px-2 py-0.5 rounded-full tracking-wide">
                         TODAY
                       </span>
                     )}
                   </div>
-                  <div className="text-sm font-semibold text-foreground">{day.section}</div>
+                  <div className="text-sm font-medium text-foreground mt-0.5">{day.section}</div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {subjDots.map((subj) => (
-                    <div
-                      key={subj}
-                      className="w-[5px] h-[5px] rounded-full"
-                      style={{ background: colorMap[SUBJ_COLOR[subj]] || colorMap.lime }}
-                    />
-                  ))}
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1">
+                    {subjDots.map((subj) => (
+                      <div
+                        key={subj}
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ background: colorMap[SUBJ_COLOR[subj]] || colorMap.lime }}
+                      />
+                    ))}
+                  </div>
                   <span
-                    className="font-mono text-xs font-bold min-w-[32px] text-right"
+                    className="font-mono text-xs font-semibold min-w-[32px] text-right"
                     style={{ color: isDone ? colorMap.lime : "var(--muted-foreground)" }}
                   >
                     {pct}%
                   </span>
                   <ChevronDown
-                    className={cn("w-4 h-4 text-muted-foreground transition-transform", isOpen && "rotate-180")}
+                    className={cn("w-4 h-4 text-muted-foreground/60 transition-transform", isOpen && "rotate-180")}
                   />
                 </div>
               </button>
 
               {/* Tasks */}
               {isOpen && (
-                <div className="px-3 pb-3 pt-2 border-t border-border/50 space-y-1">
+                <div className="px-4 pb-4 pt-2 border-t border-border/40 space-y-1.5">
                   {day.tasks.map((task) => {
                     const done = store.mdcatDone[task.id]
                     const color = colorMap[SUBJ_COLOR[task.subj]] || colorMap.lime
@@ -145,17 +149,17 @@ export function PlanView() {
                       <button
                         key={task.id}
                         onClick={() => store.toggleMdcatTask(task.id)}
-                        className="w-full flex items-center gap-2 py-2 px-1 text-left"
+                        className="w-full flex items-center gap-3 py-2.5 text-left active:opacity-80"
                       >
                         <div
                           className={cn(
                             "w-4 h-4 rounded flex items-center justify-center border-[1.5px] transition-all flex-shrink-0",
-                            done ? "bg-primary border-primary" : "border-border"
+                            done ? "bg-primary border-primary" : "border-border/80"
                           )}
                         >
                           {done && <Check className="w-2.5 h-2.5 text-primary-foreground" />}
                         </div>
-                        <div className="w-[5px] h-[5px] rounded-full flex-shrink-0" style={{ background: color }} />
+                        <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
                         <span className={cn("flex-1 text-sm", done && "text-muted-foreground line-through")}>
                           {task.text}
                         </span>

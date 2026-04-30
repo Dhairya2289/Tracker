@@ -16,19 +16,12 @@ export function CommandCenter() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Subtle dot grid background */}
+      {/* Subtle dot grid - reduced opacity for less visual noise */}
       <div
-        className="fixed inset-0 pointer-events-none opacity-30"
+        className="fixed inset-0 pointer-events-none opacity-[0.15]"
         style={{
-          backgroundImage: "radial-gradient(circle, oklch(0.25 0.02 280) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-      />
-      {/* Vignette */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse at center, transparent 50%, rgba(2,2,8,0.7) 100%)",
+          backgroundImage: "radial-gradient(circle, oklch(0.35 0.01 260) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
         }}
       />
 
@@ -36,7 +29,7 @@ export function CommandCenter() {
         <Header />
         <StatsBar />
 
-        <main className="pb-16">
+        <main className="pb-20">
           {currentView === "today" && <TodayView />}
           {currentView === "plan" && <PlanView />}
           {currentView === "diet" && <DietView />}
