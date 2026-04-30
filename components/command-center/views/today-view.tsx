@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { useStore } from "@/lib/store"
-import { MEALS, NEET_BLOCKS, MDCAT_BLOCKS, MDCAT_BLOCK_INFO, SUBJ_COLOR, SUBJ_LBL, STEP_MS, CARDIO_MS } from "@/lib/data"
+import { MEALS, NEET_BLOCKS, MDCAT_BLOCKS, MDCAT_BLOCK_INFO, SUBJ_COLOR, SUBJ_LBL } from "@/lib/data"
 import { ProgressRing } from "../progress-ring"
 import { ProgressBar } from "../progress-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon, Dumbbell } from "lucide-react"
+import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
@@ -436,140 +436,7 @@ export function TodayView() {
         </CardContent>
       </Card>
 
-      {/* Fitness Quick */}
-      <FitnessQuickSection />
     </div>
-  )
-}
-
-function FitnessQuickSection() {
-  const store = useStore()
-  const todayData = store.getTodayData()
-  const cp = store.getCurrentPhase()
-  const { stepsHit, cardioHit, done: fd, total: ft } = store.getFitDone()
-
-  return (
-    <Card className="border-l-[3px]" style={{ borderLeftColor: colorMap[cp.color] || colorMap.orange }}>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: colorMap[cp.color] || colorMap.orange }}>
-            Fitness - {cp.name}
-          </span>
-          <span className="font-mono text-xs font-semibold" style={{ color: fd === ft ? colorMap.lime : "var(--muted-foreground)" }}>
-            {fd}/{ft} done
-          </span>
-        </div>
-
-        {/* Quick Stats */}
-        <div className={cn("grid gap-2 mb-4", cp.cardio > 0 ? "grid-cols-3" : "grid-cols-2")}>
-          <div className={cn(
-            "rounded-xl border p-3.5 text-center transition-all",
-            stepsHit && "border-orange-500/30 bg-orange-500/5"
-          )}>
-            <div className="text-lg font-semibold" style={{ color: stepsHit ? colorMap.orange : "var(--muted-foreground)" }}>
-              {todayData.steps > 0 ? (todayData.steps >= 1000 ? `${(todayData.steps / 1000).toFixed(1)}k` : todayData.steps) : "-"}
-            </div>
-            <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Steps{stepsHit && " ✓"}</div>
-          </div>
-          {cp.cardio > 0 && (
-            <div className={cn(
-              "rounded-xl border p-3.5 text-center transition-all",
-              cardioHit && "border-cyan-500/30 bg-cyan-500/5"
-            )}>
-              <div className="text-lg font-semibold" style={{ color: cardioHit ? colorMap.cyan : "var(--muted-foreground)" }}>
-                {todayData.cardio > 0 ? `${todayData.cardio}m` : "-"}
-              </div>
-              <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Cardio{cardioHit && " ✓"}</div>
-            </div>
-          )}
-          <div className={cn(
-            "rounded-xl border p-3.5 text-center transition-all",
-            todayData.strength && "border-violet-500/30 bg-violet-500/5"
-          )}>
-            <div className="text-lg font-semibold" style={{ color: todayData.strength ? colorMap.violet : "var(--muted-foreground)" }}>
-              {todayData.strength ? "✓" : "-"}
-            </div>
-            <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Strength</div>
-          </div>
-        </div>
-
-        {/* Steps Target */}
-        <div className="mb-4">
-          <div className="font-mono text-[10px] text-muted-foreground/70 tracking-widest uppercase mb-2.5">
-            Steps Target: {cp.steps.toLocaleString()}
-          </div>
-          <div className="flex gap-1.5 mb-3">
-            {STEP_MS.map((m) => (
-              <button
-                key={m}
-                onClick={() => store.setSteps(m)}
-                className={cn(
-                  "flex-1 py-2.5 rounded-lg border font-mono text-[10px] font-medium transition-all active:scale-[0.98]",
-                  todayData.steps >= m
-                    ? "bg-orange-500/10 border-orange-500/40 text-orange-500"
-                    : "border-border/60 text-muted-foreground"
-                )}
-              >
-                {m >= 1000 ? `${m / 1000}k` : m}
-              </button>
-            ))}
-          </div>
-          {todayData.steps > 0 && (
-            <ProgressBar value={todayData.steps} max={cp.steps} color={colorMap.orange} height={4} />
-          )}
-        </div>
-
-        {/* Cardio Target */}
-        {cp.cardio > 0 && (
-          <div className="mb-4">
-            <div className="font-mono text-[10px] text-muted-foreground/70 tracking-widest uppercase mb-2.5">
-              Cardio Target: {cp.cardio} min
-            </div>
-            <div className="flex gap-1.5">
-              {CARDIO_MS.map((m) => (
-                <button
-                  key={m}
-                  onClick={() => store.setCardio(m)}
-                  className={cn(
-                    "flex-1 py-2.5 rounded-lg border font-mono text-[10px] font-medium transition-all active:scale-[0.98]",
-                    todayData.cardio >= m
-                      ? "bg-cyan-500/10 border-cyan-500/40 text-cyan-500"
-                      : "border-border/60 text-muted-foreground"
-                  )}
-                >
-                  {m}m
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Strength Toggle */}
-        <button
-          onClick={() => store.toggleStrength()}
-          className={cn(
-            "w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left active:scale-[0.99]",
-            todayData.strength ? "border-violet-500/40 bg-violet-500/5" : "border-border/60"
-          )}
-        >
-          <div className={cn(
-            "w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] transition-all flex-shrink-0",
-            todayData.strength ? "bg-violet-500 border-violet-500" : "border-border/80 bg-background"
-          )}>
-            {todayData.strength && <Check className="w-3 h-3 text-primary-foreground" />}
-          </div>
-          <Dumbbell className="w-5 h-5" style={{ color: todayData.strength ? colorMap.violet : "var(--muted-foreground)" }} />
-          <div className="flex-1">
-            <div className="text-sm font-medium" style={todayData.strength ? { color: colorMap.violet } : {}}>
-              Strength Training
-            </div>
-            <div className="font-mono text-[10px] text-muted-foreground/70 mt-0.5">
-              5x/week - Compound lifts - Progressive overload
-            </div>
-          </div>
-        </button>
-      </CardContent>
-    </Card>
   )
 }
 
