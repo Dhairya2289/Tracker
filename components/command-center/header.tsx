@@ -12,7 +12,7 @@ export function Header() {
     const update = () => {
       const now = new Date()
       setTime(
-        `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`
+        `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`
       )
       const diff = Math.ceil((EXAM_DATE.getTime() - now.getTime()) / 86400000)
       setDaysLeft(diff)
@@ -42,14 +42,14 @@ export function Header() {
 
         {/* Time & Countdown */}
         <div className="text-right">
-          <div className="font-mono text-2xl font-semibold text-foreground tracking-tight leading-none">
+          <div className="font-mono text-xl font-bold text-primary tracking-wider leading-none drop-shadow-[0_0_12px_rgba(57,255,20,0.4)]">
             {time}
           </div>
-          <div className="font-mono text-[11px] text-muted-foreground mt-1 tracking-wide">
+          <div className="font-mono text-[10px] text-muted-foreground mt-1.5 tracking-wider uppercase">
             {daysLeft !== null && daysLeft > 0 ? (
-              <span className="text-destructive font-medium">{daysLeft}D left</span>
+              <span className="text-destructive/80 font-semibold">{daysLeft}D to MDCAT</span>
             ) : daysLeft === 0 ? (
-              <span className="text-destructive font-medium">Today</span>
+              <span className="text-destructive font-semibold">EXAM DAY</span>
             ) : (
               <span className="text-primary">Complete</span>
             )}

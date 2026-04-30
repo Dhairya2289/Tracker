@@ -146,14 +146,14 @@
   opacity: 0.9;
 }
 
-/* Ticker marquee animation - simplified */
+/* Ticker marquee animation */
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-200%); }
 }
 
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  animation: marquee 22s linear infinite;
 }
 
 /* Safe area insets for mobile devices */

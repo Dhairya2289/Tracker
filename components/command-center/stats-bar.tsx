@@ -24,8 +24,8 @@ export function StatsBar() {
   const overallPct = getOverallPct()
 
   const stats = [
-    { label: "Days", value: daysLeft !== null && daysLeft > 0 ? daysLeft : "0", color: colorMap.coral },
-    { label: "Streak", value: `${meta.streak}`, color: colorMap.lime },
+    { label: "Days Left", value: daysLeft !== null && daysLeft > 0 ? daysLeft : "0", color: colorMap.coral },
+    { label: "Streak", value: meta.streak > 0 ? `${meta.streak}🔥` : "0", color: colorMap.lime },
     { label: "Today", value: `${overallPct}%`, color: colorMap.cyan },
     { label: "MCQs", value: todayData.mcqs, color: colorMap.amber },
   ]
