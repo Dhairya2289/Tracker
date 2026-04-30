@@ -7,7 +7,7 @@ import { ProgressBar } from "../progress-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, Dumbbell, Footprints, Bike, Flame, Target, BookOpen } from "lucide-react"
+import { Check, Dumbbell, Footprints, Bike, Flame, Target, BookOpen, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
@@ -187,7 +187,7 @@ export function BodyView() {
                 const prev = i > 0 ? arr[i - 1].weight : null
                 const diff = prev ? (w.weight - prev).toFixed(1) : null
                 return (
-                  <div key={w.date} className="flex justify-between items-center py-2.5 border-b border-border/20 last:border-b-0">
+                  <div key={w.date} className="flex justify-between items-center py-2.5 border-b border-border/20 last:border-b-0 group">
                     <span className="font-mono text-[10px] text-muted-foreground/70">{w.date}</span>
                     <div className="flex items-center gap-3">
                       {diff !== null && (
@@ -196,6 +196,13 @@ export function BodyView() {
                         </span>
                       )}
                       <span className="text-base font-semibold text-cyan-500">{w.weight} kg</span>
+                      <button
+                        onClick={() => store.deleteWeight(w.date)}
+                        className="opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 opacity-40 p-1 rounded-md hover:bg-destructive/10 transition-all"
+                        title="Delete entry"
+                      >
+                        <X className="w-3.5 h-3.5 text-destructive" />
+                      </button>
                     </div>
                   </div>
                 )

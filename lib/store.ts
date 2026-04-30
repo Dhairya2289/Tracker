@@ -62,6 +62,7 @@ interface Actions {
   setCardio: (n: number) => void
   setFitPhase: (id: number) => void
   saveWeight: (w: number) => void
+  deleteWeight: (date: string) => void
   setView: (view: string) => void
   setExpandedRule: (num: string | null) => void
   setExpandedMeal: (id: number | null) => void
@@ -84,6 +85,8 @@ interface Actions {
   mdcatTotalDone: () => number
   mdcatTotalTasks: () => number
   updateStreak: () => void
+  resetToday: () => void
+  resetAllData: () => void
 }
 
 const defaultDayData = (): DayData => ({
@@ -212,6 +215,13 @@ export const useStore = create<State & Actions>()(
         }))
       },
 
+      deleteWeight: (date) => {
+        set((state) => ({
+          weights: state.weights.filter((x) => x.date !== date),
+        }))
+        get().showToast("Weight entry deleted")
+      },
+
       setView: (view) => set({ currentView: view }),
       setExpandedRule: (num) => set({ expandedRule: num }),
       setExpandedMeal: (id) => set({ expandedMeal: id }),
@@ -334,6 +344,32 @@ export const useStore = create<State & Actions>()(
         set((state) => ({
           history: { ...state.history, [todayKey()]: get().getOverallPct() },
         }))
+      },
+
+      resetToday: () => {
+        const key = todayKey()
+        set((state) => ({
+          days: {
+            ...state.days,
+            [key]: defaultDayData(),
+          },
+        }))
+        get().showToast("Today's progress reset")
+      },
+
+      resetAllData: () => {
+        set({
+          mdcatDone: {},
+          mdcatOpen: [],
+          history: {},
+          weights: [],
+          meta: defaultMeta(),
+          days: {},
+          currentView: "today",
+          expandedRule: null,
+          expandedMeal: null,
+        })
+        get().showToast("All data cleared")
       },
     }),
     {

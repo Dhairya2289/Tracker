@@ -8,7 +8,7 @@ import { ProgressBar } from "../progress-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon } from "lucide-react"
+import { Check, ChevronDown, ChevronUp, Leaf, Calculator, FlaskConical, Atom, Zap, RefreshCw, Sunrise, Sun, Sunset, Moon, Dumbbell } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const colorMap: Record<string, string> = {
@@ -65,8 +65,10 @@ export function TodayView() {
   const store = useStore()
   const [currentBlock, setCurrentBlock] = useState<ReturnType<typeof getCurrentMdcatBlock>>(null)
   const [expandedBlocks, setExpandedBlocks] = useState<Set<number>>(new Set())
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const update = () => setCurrentBlock(getCurrentMdcatBlock())
     update()
     const interval = setInterval(update, 30000)
@@ -145,7 +147,7 @@ export function TodayView() {
       {/* Block Timeline */}
       <div className="flex gap-1.5">
         {MDCAT_BLOCKS.map((_, i) => {
-          const st = getBlockStatus(i)
+          const st = mounted ? getBlockStatus(i) : "future"
           return (
             <div
               key={i}
@@ -383,23 +385,7 @@ export function TodayView() {
               -10
             </Button>
           </div>
-          <div className="flex gap-2 mt-2">
-            <Input
-              type="number"
-              placeholder="Set exact number"
-              min={0}
-              className="flex-1 font-mono bg-muted/20 h-10"
-              onChange={(e) => {
-                const v = parseInt(e.target.value)
-                if (!isNaN(v) && v >= 0) store.setMcqs(v)
-              }}
-            />
-            {todayData.mcqs > 0 && (
-              <Button variant="ghost" size="sm" onClick={() => store.setMcqs(0)} className="font-mono text-xs text-muted-foreground h-10">
-                Reset
-              </Button>
-            )}
-          </div>
+          <McqExactInput currentValue={todayData.mcqs} onSet={store.setMcqs} />
         </CardContent>
       </Card>
 
@@ -449,6 +435,199 @@ export function TodayView() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Fitness Quick */}
+      <FitnessQuickSection />
+    </div>
+  )
+}
+
+function FitnessQuickSection() {
+  const store = useStore()
+  const todayData = store.getTodayData()
+  const cp = store.getCurrentPhase()
+  const { stepsHit, cardioHit, done: fd, total: ft } = store.getFitDone()
+
+  return (
+    <Card className="border-l-[3px]" style={{ borderLeftColor: colorMap[cp.color] || colorMap.orange }}>
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: colorMap[cp.color] || colorMap.orange }}>
+            Fitness - {cp.name}
+          </span>
+          <span className="font-mono text-xs font-semibold" style={{ color: fd === ft ? colorMap.lime : "var(--muted-foreground)" }}>
+            {fd}/{ft} done
+          </span>
+        </div>
+
+        {/* Quick Stats */}
+        <div className={cn("grid gap-2 mb-4", cp.cardio > 0 ? "grid-cols-3" : "grid-cols-2")}>
+          <div className={cn(
+            "rounded-xl border p-3.5 text-center transition-all",
+            stepsHit && "border-orange-500/30 bg-orange-500/5"
+          )}>
+            <div className="text-lg font-semibold" style={{ color: stepsHit ? colorMap.orange : "var(--muted-foreground)" }}>
+              {todayData.steps > 0 ? (todayData.steps >= 1000 ? `${(todayData.steps / 1000).toFixed(1)}k` : todayData.steps) : "-"}
+            </div>
+            <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Steps{stepsHit && " ✓"}</div>
+          </div>
+          {cp.cardio > 0 && (
+            <div className={cn(
+              "rounded-xl border p-3.5 text-center transition-all",
+              cardioHit && "border-cyan-500/30 bg-cyan-500/5"
+            )}>
+              <div className="text-lg font-semibold" style={{ color: cardioHit ? colorMap.cyan : "var(--muted-foreground)" }}>
+                {todayData.cardio > 0 ? `${todayData.cardio}m` : "-"}
+              </div>
+              <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Cardio{cardioHit && " ✓"}</div>
+            </div>
+          )}
+          <div className={cn(
+            "rounded-xl border p-3.5 text-center transition-all",
+            todayData.strength && "border-violet-500/30 bg-violet-500/5"
+          )}>
+            <div className="text-lg font-semibold" style={{ color: todayData.strength ? colorMap.violet : "var(--muted-foreground)" }}>
+              {todayData.strength ? "✓" : "-"}
+            </div>
+            <div className="font-mono text-[9px] text-muted-foreground/70 mt-1 uppercase">Strength</div>
+          </div>
+        </div>
+
+        {/* Steps Target */}
+        <div className="mb-4">
+          <div className="font-mono text-[10px] text-muted-foreground/70 tracking-widest uppercase mb-2.5">
+            Steps Target: {cp.steps.toLocaleString()}
+          </div>
+          <div className="flex gap-1.5 mb-3">
+            {STEP_MS.map((m) => (
+              <button
+                key={m}
+                onClick={() => store.setSteps(m)}
+                className={cn(
+                  "flex-1 py-2.5 rounded-lg border font-mono text-[10px] font-medium transition-all active:scale-[0.98]",
+                  todayData.steps >= m
+                    ? "bg-orange-500/10 border-orange-500/40 text-orange-500"
+                    : "border-border/60 text-muted-foreground"
+                )}
+              >
+                {m >= 1000 ? `${m / 1000}k` : m}
+              </button>
+            ))}
+          </div>
+          {todayData.steps > 0 && (
+            <ProgressBar value={todayData.steps} max={cp.steps} color={colorMap.orange} height={4} />
+          )}
+        </div>
+
+        {/* Cardio Target */}
+        {cp.cardio > 0 && (
+          <div className="mb-4">
+            <div className="font-mono text-[10px] text-muted-foreground/70 tracking-widest uppercase mb-2.5">
+              Cardio Target: {cp.cardio} min
+            </div>
+            <div className="flex gap-1.5">
+              {CARDIO_MS.map((m) => (
+                <button
+                  key={m}
+                  onClick={() => store.setCardio(m)}
+                  className={cn(
+                    "flex-1 py-2.5 rounded-lg border font-mono text-[10px] font-medium transition-all active:scale-[0.98]",
+                    todayData.cardio >= m
+                      ? "bg-cyan-500/10 border-cyan-500/40 text-cyan-500"
+                      : "border-border/60 text-muted-foreground"
+                  )}
+                >
+                  {m}m
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Strength Toggle */}
+        <button
+          onClick={() => store.toggleStrength()}
+          className={cn(
+            "w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all text-left active:scale-[0.99]",
+            todayData.strength ? "border-violet-500/40 bg-violet-500/5" : "border-border/60"
+          )}
+        >
+          <div className={cn(
+            "w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] transition-all flex-shrink-0",
+            todayData.strength ? "bg-violet-500 border-violet-500" : "border-border/80 bg-background"
+          )}>
+            {todayData.strength && <Check className="w-3 h-3 text-primary-foreground" />}
+          </div>
+          <Dumbbell className="w-5 h-5" style={{ color: todayData.strength ? colorMap.violet : "var(--muted-foreground)" }} />
+          <div className="flex-1">
+            <div className="text-sm font-medium" style={todayData.strength ? { color: colorMap.violet } : {}}>
+              Strength Training
+            </div>
+            <div className="font-mono text-[10px] text-muted-foreground/70 mt-0.5">
+              5x/week - Compound lifts - Progressive overload
+            </div>
+          </div>
+        </button>
+      </CardContent>
+    </Card>
+  )
+}
+
+function McqExactInput({ currentValue, onSet }: { currentValue: number; onSet: (n: number) => void }) {
+  const [inputValue, setInputValue] = useState(currentValue > 0 ? String(currentValue) : "")
+  const [showConfirm, setShowConfirm] = useState(false)
+
+  const handleSubmit = () => {
+    const v = parseInt(inputValue)
+    if (!isNaN(v) && v >= 0) {
+      onSet(v)
+      setShowConfirm(true)
+      setTimeout(() => setShowConfirm(false), 1500)
+    }
+  }
+
+  return (
+    <div className="flex gap-2 mt-2">
+      <div className="relative flex-1">
+        <Input
+          type="number"
+          placeholder="Set exact number"
+          min={0}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          className={cn(
+            "font-mono bg-muted/20 h-10 pr-16 transition-all",
+            showConfirm && "border-primary/40 bg-primary/5"
+          )}
+        />
+        {showConfirm && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[10px] text-primary font-semibold">
+            Set!
+          </span>
+        )}
+      </div>
+      <Button 
+        variant="outline" 
+        size="sm" 
+        onClick={handleSubmit}
+        className="font-mono text-xs h-10 px-4 border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+      >
+        Set
+      </Button>
+      {currentValue > 0 && (
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => {
+            onSet(0)
+            setInputValue("")
+          }} 
+          className="font-mono text-xs text-muted-foreground h-10"
+        >
+          Clear
+        </Button>
+      )}
     </div>
   )
 }
