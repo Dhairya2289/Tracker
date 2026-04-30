@@ -95,7 +95,7 @@ export const SYSTEM_RULES = [
   { num: "12", title: "TRACK OUTPUT", body: "'Did 80 MCQs' > 'studied 8 hours'. Output = truth. Time = lie.", color: "violet" },
 ] as const
 
-export const MDCAT_BLOCKS = [
+export const NEET_SCHEDULE = [
   { start: [6, 0], end: [9, 0] },
   { start: [9, 15], end: [11, 15] },
   { start: [11, 30], end: [14, 30] },
@@ -104,7 +104,7 @@ export const MDCAT_BLOCKS = [
   { start: [19, 30], end: [21, 30] },
 ] as const
 
-export const MDCAT_BLOCK_INFO = [
+export const NEET_SCHEDULE_INFO = [
   { n: 1, dur: "3H", task: "Biology Lecture + Notes", time: "06:00-09:00" },
   { n: 2, dur: "2H", task: "Biology NCERT + PYQs", time: "09:15-11:15" },
   { n: 3, dur: "3H", task: "Chemistry Lecture", time: "11:30-14:30" },

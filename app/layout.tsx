@@ -14,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Command Center - MDCAT Tracker',
-  description: 'Your personal productivity dashboard for MDCAT preparation',
+  title: 'Command Center - NEET + CUET Tracker',
+  description: 'Your personal productivity dashboard for NEET + CUET preparation',
   generator: 'v0.app',
 }
 

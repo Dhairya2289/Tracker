@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useStore } from "@/lib/store"
-import { MEALS, NEET_BLOCKS, MDCAT_BLOCKS, MDCAT_BLOCK_INFO, SUBJ_COLOR, SUBJ_LBL } from "@/lib/data"
+import { MEALS, NEET_BLOCKS, NEET_SCHEDULE, NEET_SCHEDULE_INFO, SUBJ_COLOR, SUBJ_LBL } from "@/lib/data"
 import { ProgressRing } from "../progress-ring"
 import { ProgressBar } from "../progress-bar"
 import { Card, CardContent } from "@/components/ui/card"
@@ -41,12 +41,12 @@ const blockIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElemen
 function getCurrentMdcatBlock() {
   const now = new Date()
   const mins = now.getHours() * 60 + now.getMinutes()
-  for (let i = 0; i < MDCAT_BLOCKS.length; i++) {
-    const b = MDCAT_BLOCKS[i]
+  for (let i = 0; i < NEET_SCHEDULE.length; i++) {
+    const b = NEET_SCHEDULE[i]
     const s = b.start[0] * 60 + b.start[1]
     const e = b.end[0] * 60 + b.end[1]
     if (mins >= s && mins < e) {
-      return { idx: i, pct: Math.round(((mins - s) / (e - s)) * 100), remaining: e - mins, block: MDCAT_BLOCK_INFO[i] }
+      return { idx: i, pct: Math.round(((mins - s) / (e - s)) * 100), remaining: e - mins, block: NEET_SCHEDULE_INFO[i] }
     }
   }
   return null
@@ -55,7 +55,7 @@ function getCurrentMdcatBlock() {
 function getBlockStatus(i: number) {
   const now = new Date()
   const mins = now.getHours() * 60 + now.getMinutes()
-  const b = MDCAT_BLOCKS[i]
+  const b = NEET_SCHEDULE[i]
   const s = b.start[0] * 60 + b.start[1]
   const e = b.end[0] * 60 + b.end[1]
   return mins >= e ? "done" : mins >= s ? "active" : "future"
@@ -146,7 +146,7 @@ export function TodayView() {
 
       {/* Block Timeline */}
       <div className="flex gap-1.5">
-        {MDCAT_BLOCKS.map((_, i) => {
+        {NEET_SCHEDULE.map((_, i) => {
           const st = mounted ? getBlockStatus(i) : "future"
           return (
             <div

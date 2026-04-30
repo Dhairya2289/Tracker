@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useStore } from "@/lib/store"
-import { SYSTEM_RULES, MDCAT_BLOCK_INFO } from "@/lib/data"
+import { SYSTEM_RULES, NEET_BLOCK_INFO } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Clock, Smartphone, BookOpen, FileText, RotateCcw, Trash2 } from "lucide-react"
@@ -40,7 +40,7 @@ export function RulesView() {
       {/* Core Rules */}
       <Card className="border-l-[3px] border-l-destructive">
         <CardContent className="p-4">
-          <span className="font-mono text-[10px] text-destructive tracking-widest uppercase block mb-4">MDCAT Core Rules</span>
+          <span className="font-mono text-[10px] text-destructive tracking-widest uppercase block mb-4">NEET Core Rules</span>
           <div className="space-y-4">
             {coreRules.map((rule, i) => {
               const Icon = rule.icon
@@ -69,7 +69,7 @@ export function RulesView() {
         <CardContent className="p-4">
           <span className="font-mono text-[10px] text-amber-500 tracking-widest uppercase block mb-4">Daily Schedule</span>
           <div className="grid grid-cols-2 gap-2">
-            {MDCAT_BLOCK_INFO.map((b) => (
+            {NEET_BLOCK_INFO.map((b) => (
               <div key={b.n} className="bg-muted/10 rounded-xl p-3 flex items-center gap-3">
                 <div className="text-lg font-bold text-muted-foreground/30 min-w-[20px]">{b.n}</div>
                 <div>
@@ -217,7 +217,7 @@ function ResetSection() {
         ) : (
           <div className="p-3.5 rounded-xl border border-destructive/30 bg-destructive/5 space-y-3">
             <div className="text-sm font-medium text-destructive">Delete all data permanently?</div>
-            <div className="text-xs text-muted-foreground">This will remove ALL history, streaks, MDCAT progress, weights, and settings. This cannot be undone.</div>
+            <div className="text-xs text-muted-foreground">This will remove ALL history, streaks, NEET progress, weights, and settings. This cannot be undone.</div>
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
