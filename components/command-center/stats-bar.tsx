@@ -1,0 +1,62 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useStore } from "@/lib/store"
+import { EXAM_DATE } from "@/lib/data"
+
+const colorMap = {
+  coral: "oklch(0.65 0.16 25)",
+  lime: "oklch(0.68 0.14 155)",
+  cyan: "oklch(0.72 0.10 200)",
+  amber: "oklch(0.72 0.12 85)",
+}
+
+export function StatsBar() {
+  const { meta, getTodayData, getOverallPct } = useStore()
+  const [daysLeft, setDaysLeft] = useState<number | null>(null)
+
+  useEffect(() => {
+    const diff = Math.ceil((EXAM_DATE.getTime() - new Date().getTime()) / 86400000)
+    setDaysLeft(diff)
+  }, [])
+
+  const todayData = getTodayData()
+  const overallPct = getOverallPct()
+
+  const stats = [
+    { label: "Days Left", value: daysLeft !== null && daysLeft > 0 ? daysLeft : "0", color: colorMap.coral },
+    { label: "Streak", value: meta.streak > 0 ? `${meta.streak}🔥` : "0", color: colorMap.lime },
+    { label: "Today", value: `${overallPct}%`, color: colorMap.cyan },
+    { label: "MCQs", value: todayData.mcqs, color: colorMap.amber },
+  ]
+
+  return (
+    <div className="grid grid-cols-4 bg-card border-b border-border/60">
+      {stats.map((stat) => (
+        <div
+          key={stat.label}
+          className="relative py-3 sm:py-3.5 px-1 sm:px-2 text-center border-r border-border/30 last:border-r-0 min-w-0"
+        >
+          <div
+            className="text-base sm:text-xl font-semibold leading-none tracking-tight truncate"
+            style={{ color: stat.color }}
+          >
+            {stat.value}
+          </div>
+          <div className="font-mono text-[8px] sm:text-[10px] text-muted-foreground/80 tracking-wider uppercase mt-1 sm:mt-1.5 truncate">
+            {stat.label}
+          </div>
+          {/* Colored glow indicator */}
+          <div
+            className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-t-sm"
+            style={{
+              background: stat.color,
+              boxShadow: `0 0 6px ${stat.color}`,
+              opacity: 0.9,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}

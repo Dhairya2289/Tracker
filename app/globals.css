@@ -1,0 +1,177 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Premium dark theme - Linear/Notion/Apple inspired */
+  /* Softer, less saturated backgrounds for reduced eye strain */
+  --background: oklch(0.10 0.005 260);
+  --foreground: oklch(0.92 0.005 260);
+  
+  --card: oklch(0.13 0.005 260);
+  --card-foreground: oklch(0.92 0.005 260);
+  
+  --popover: oklch(0.11 0.005 260);
+  --popover-foreground: oklch(0.92 0.005 260);
+  
+  /* Softer, more refined primary - less neon */
+  --primary: oklch(0.68 0.14 155);
+  --primary-foreground: oklch(0.10 0.005 260);
+  
+  --secondary: oklch(0.16 0.005 260);
+  --secondary-foreground: oklch(0.82 0.005 260);
+  
+  --muted: oklch(0.18 0.005 260);
+  --muted-foreground: oklch(0.55 0.01 260);
+  
+  --accent: oklch(0.20 0.01 260);
+  --accent-foreground: oklch(0.92 0.005 260);
+  
+  /* Softer destructive - less harsh */
+  --destructive: oklch(0.62 0.18 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  
+  --border: oklch(0.22 0.01 260);
+  --input: oklch(0.16 0.005 260);
+  --ring: oklch(0.68 0.14 155);
+  
+  /* Refined subject colors - less saturated, easier on eyes */
+  --bio: oklch(0.68 0.14 155);
+  --chem: oklch(0.72 0.10 200);
+  --eng: oklch(0.72 0.12 85);
+  --gat: oklch(0.68 0.12 280);
+  --rev: oklch(0.70 0.12 55);
+  --phys: oklch(0.65 0.16 25);
+  
+  /* Accent colors - toned down for premium feel */
+  --lime: oklch(0.68 0.14 155);
+  --coral: oklch(0.65 0.16 25);
+  --cyan: oklch(0.72 0.10 200);
+  --amber: oklch(0.72 0.12 85);
+  --violet: oklch(0.68 0.12 280);
+  --orange: oklch(0.70 0.12 55);
+  
+  --radius: 0.625rem;
+  
+  --sidebar: oklch(0.11 0.005 260);
+  --sidebar-foreground: oklch(0.92 0.005 260);
+  --sidebar-primary: oklch(0.68 0.14 155);
+  --sidebar-primary-foreground: oklch(0.10 0.005 260);
+  --sidebar-accent: oklch(0.16 0.01 260);
+  --sidebar-accent-foreground: oklch(0.92 0.005 260);
+  --sidebar-border: oklch(0.22 0.01 260);
+  --sidebar-ring: oklch(0.68 0.14 155);
+}
+
+@theme inline {
+  --font-sans: var(--font-sans, 'Inter'), 'Inter Fallback', system-ui, sans-serif;
+  --font-mono: var(--font-mono, 'JetBrains Mono'), 'JetBrains Mono Fallback', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.25 0.02 280);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.30 0.02 280);
+}
+
+/* Touch optimizations */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Smooth transitions for interactions */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Subtle press effect for touch */
+.press-effect:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* Ticker marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-200%); }
+}
+
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+
+/* Safe area insets for mobile devices */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Focus states - subtle and accessible */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Improved tap targets for mobile - minimum 44px */
+@media (max-width: 768px) {
+  button, 
+  [role="button"] {
+    min-height: 44px;
+  }
+}
