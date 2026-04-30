@@ -15,7 +15,7 @@ interface ProgressRingProps {
 export function ProgressRing({
   progress,
   size = 100,
-  strokeWidth = 6,
+  strokeWidth = 5,
   color = "var(--primary)",
   label,
   sublabel,
@@ -29,6 +29,7 @@ export function ProgressRing({
   return (
     <div className={cn("relative", className)} style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
+        {/* Background track */}
         <circle
           cx={center}
           cy={center}
@@ -36,8 +37,9 @@ export function ProgressRing({
           fill="none"
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-muted/30"
+          className="text-muted/20"
         />
+        {/* Progress fill */}
         <circle
           cx={center}
           cy={center}
@@ -49,22 +51,19 @@ export function ProgressRing({
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           className="transition-all duration-700 ease-out"
-          style={{
-            filter: `drop-shadow(0 0 6px ${color})`,
-          }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         {label !== undefined && (
           <span
-            className="font-semibold leading-none"
-            style={{ color, fontSize: size < 70 ? "12px" : size < 100 ? "18px" : "28px" }}
+            className="font-semibold leading-none tracking-tight"
+            style={{ color, fontSize: size < 70 ? "11px" : size < 100 ? "16px" : "24px" }}
           >
             {label}
           </span>
         )}
         {sublabel && (
-          <span className="text-muted-foreground font-mono text-[10px] tracking-wider mt-1">
+          <span className="text-muted-foreground/70 font-mono text-[9px] tracking-wider mt-1 uppercase">
             {sublabel}
           </span>
         )}

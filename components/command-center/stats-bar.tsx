@@ -5,10 +5,10 @@ import { useStore } from "@/lib/store"
 import { EXAM_DATE } from "@/lib/data"
 
 const colorMap = {
-  coral: "oklch(0.70 0.20 25)",
-  lime: "oklch(0.75 0.18 145)",
-  cyan: "oklch(0.78 0.12 200)",
-  amber: "oklch(0.78 0.15 85)",
+  coral: "oklch(0.65 0.16 25)",
+  lime: "oklch(0.68 0.14 155)",
+  cyan: "oklch(0.72 0.10 200)",
+  amber: "oklch(0.72 0.12 85)",
 }
 
 export function StatsBar() {
@@ -25,30 +25,35 @@ export function StatsBar() {
 
   const stats = [
     { label: "Days Left", value: daysLeft !== null && daysLeft > 0 ? daysLeft : "0", color: colorMap.coral },
-    { label: "Streak", value: `${meta.streak}`, color: colorMap.lime },
+    { label: "Streak", value: meta.streak > 0 ? `${meta.streak}🔥` : "0", color: colorMap.lime },
     { label: "Today", value: `${overallPct}%`, color: colorMap.cyan },
     { label: "MCQs", value: todayData.mcqs, color: colorMap.amber },
   ]
 
   return (
-    <div className="grid grid-cols-4 border-b border-border bg-card/50">
-      {stats.map((stat, i) => (
+    <div className="grid grid-cols-4 bg-card border-b border-border/60">
+      {stats.map((stat) => (
         <div
           key={stat.label}
-          className="relative py-3 px-2 text-center border-r border-border/50 last:border-r-0"
+          className="relative py-3.5 px-2 text-center border-r border-border/30 last:border-r-0"
         >
           <div
-            className="text-2xl font-bold leading-none tracking-tight"
+            className="text-xl font-semibold leading-none tracking-tight"
             style={{ color: stat.color }}
           >
             {stat.value}
           </div>
-          <div className="font-mono text-[10px] text-muted-foreground tracking-wider uppercase mt-1">
+          <div className="font-mono text-[10px] text-muted-foreground/80 tracking-wider uppercase mt-1.5">
             {stat.label}
           </div>
+          {/* Colored glow indicator */}
           <div
-            className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-t"
-            style={{ background: stat.color, boxShadow: `0 0 6px ${stat.color}` }}
+            className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-t-sm"
+            style={{
+              background: stat.color,
+              boxShadow: `0 0 6px ${stat.color}`,
+              opacity: 0.9,
+            }}
           />
         </div>
       ))}
